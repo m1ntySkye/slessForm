@@ -1,0 +1,12 @@
+{
+  "runtime": "nodejs12.x",
+  "version": "1.0",
+  "environment": {},
+  "secrets": ["hubdb_token"],
+  "endpoints": {
+    "test_submit": {
+      "method": ["GET", "POST"],
+      "file": "test_submit.js"
+    }
+  }
+}
