@@ -2,7 +2,7 @@
   "runtime": "nodejs12.x",
   "version": "1.0",
   "environment": {},
-  "secrets": ["hubdb_token"],
+  "secrets": ["hubdb_token","dev_api_key"],
   "endpoints": {
     "test_submit": {
       "method": ["GET", "POST"],

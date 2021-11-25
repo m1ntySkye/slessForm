@@ -1,0 +1,58 @@
+{
+  "id": "5307719",
+  "name": "form_submissions",
+  "createdAt": "2021-11-16T05:57:50.190Z",
+  "publishedAt": "2021-11-18T13:55:26.269Z",
+  "updatedAt": "2021-11-18T13:55:21.347Z",
+  "label": "form submissions",
+  "columns": [
+    {
+      "name": "name",
+      "label": "Name",
+      "id": "1",
+      "archived": false,
+      "foreignIdsByName": {},
+      "foreignIdsById": {},
+      "type": "TEXT"
+    },
+    {
+      "name": "field1",
+      "label": "field1",
+      "id": "2",
+      "archived": false,
+      "foreignIdsByName": {},
+      "foreignIdsById": {},
+      "type": "TEXT"
+    },
+    {
+      "name": "field2",
+      "label": "field2",
+      "id": "3",
+      "archived": false,
+      "foreignIdsByName": {},
+      "foreignIdsById": {},
+      "type": "NUMBER"
+    }
+  ],
+  "published": true,
+  "columnCount": 3,
+  "archived": false,
+  "rowCount": 0,
+  "createdBy": {
+    "id": "24824378",
+    "email": "skyemc.biz@gmail.com",
+    "firstName": "Skye",
+    "lastName": "Mcintyre"
+  },
+  "updatedBy": {
+    "id": "24824378",
+    "email": "skyemc.biz@gmail.com",
+    "firstName": "Skye",
+    "lastName": "Mcintyre"
+  },
+  "useForPages": false,
+  "allowChildTables": false,
+  "enableChildTablePages": false,
+  "dynamicMetaTags": {},
+  "allowPublicApiAccess": false
+}

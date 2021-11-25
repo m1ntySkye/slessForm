@@ -1,18 +1,19 @@
+
 let sless_form_glob = {
 	base_url:"20615833.hs-sites.com",
 	sless_endpoint:"/_hcms/api/test_submit",
 	form_fields:{
-		"testField1":"text",
-		"testField2":"text"
+		"name":"text",
+		"field1":"text",
+		"field2":"number",
 	}
 };
 
 document.forms.mainForm.onsubmit = async (event) => {
 	event.preventDefault();
+	let formData = new FormData(document.forms.mainForm);
 
-	let formData = new FormData(event.target);
-
-  console.log(formData)
+  console.log(formData);
 
   let options = {
 		method: 'POST',
@@ -27,7 +28,7 @@ document.forms.mainForm.onsubmit = async (event) => {
   let responseTgt = document.querySelector("p#responseTgt");
   let resultTgt = document.querySelector("p#resultTgt");
   let errorTgt = document.querySelector("p#errorTgt");
-  
+
   let response = await fetch('/_hcms/api/test_submit', options);
   responseTgt.textContent = JSON.stringify(response);
 
@@ -43,22 +44,6 @@ document.forms.mainForm.onsubmit = async (event) => {
     errorTgt.textContent = response.status;
 
   }
-
-  
-  // fetch("https://20615833.hs-sites.com/_hcms/api/test_submit", options)
-  //   .then(response => {
-  //     let responseJson = response.text();
-  //     console.log(responseJson);
-  //     responseTgt.textContent = "response"+responseJson;
-  //   }).then(result => {
-  //     let resultJson = result.text();
-  //     console.log(resultJson);
-  //     resultTgt.textContent = "result"+resultJson;
-  //   })
-  //   .catch(error => {
-  //     console.log('error', error);
-  //     errorTgt.textContent = JSON.stringify(error);
-  //   });
 }
 
 /**
@@ -81,6 +66,42 @@ function jsonifyForm(formData){
       object[key].push(value);
   });
   return JSON.stringify(object);
+}
+
+function buildTableForm(targetSelector, db_def){
+  let table = document.createElement("table");
+  let table_head = document.createElement("tr");
+  let table_body = document.createElement("tr");
+  db_def.columns.forEach(col => {
+    let colHeader = document.createElement("th");
+    let chl = document.createElement("label");
+    let colData = document.createElement("td");
+    let cdi = document.createElement("input",);
+    chl.innerText = col.label;
+    chl.setAttribute("for", col.name);
+    // chl.innerText = col.label;
+    cdi.setAttribute("name", col.name);
+    cdi.setAttribute("type", col.type.toLowerCase());
+    colHeader.appendChild(chl);
+    colData.appendChild(cdi);
+    table_head.appendChild(colHeader);
+    table_body.appendChild(colData);
+  });
+  table.appendChild(table_head);
+  table.appendChild(table_body);
+  document.querySelector(targetSelector).appendChild(table);
+  return table;
+}
+/**
+ * assumes the targetselector refers to the same element 
+ * that was passed to buildTableForm
+ * @param {String} targetSelector css selector
+ * @param {Object} db_def table definition atained by 
+ *                        parsing a hubdb table GET json
+ * @param {Object} row_data parsed result of hubdb rows GET json
+ */
+function appendRows(targetSelector, db_def, rows_data){
+  
 }
 
 (()=>{
