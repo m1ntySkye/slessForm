@@ -14,6 +14,13 @@
 	<!-- <h4>onLoadResponse</h4>
 	<p id="onLoadResponse"></p> -->
 	
+	<form name="mainForm" action="#">
+		<input type="text" id="nameID" name="name">
+		<input type="text" id="field1ID" name="field1">
+		<input type="number" id="field2ID" name="field2">
+		<button type="submit" name="submitRow">add row</button>
+	</form>
+
 	<h4>response</h4>
 	<p class="any-resp" id="responseTgt"></p>
 
@@ -38,7 +45,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<form name="mainForm" action="#">
+				{# <form name="mainForm" action="#">
 				<tr>
 					<td>
 						<input type="text" id="nameID" name="name">
@@ -53,7 +60,7 @@
 						<button type="submit" name="submitRow">add row</button>
 					</td>
 				</tr>
-				</form>
+				</form> #}
 			</tbody>
 		</table>
 	</div>

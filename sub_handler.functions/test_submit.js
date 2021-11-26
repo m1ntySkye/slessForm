@@ -9,6 +9,10 @@ let APIKEY = process.env.dev_api_key;
 // const hubspotClient = new hubspot.Client({ apiKey: APIKEY });
 // console.log("hubspot: "+ Object.keys(hubspot));
 
+axios.defaults.headers.common = {
+  "Content-Type": "application/json"
+}
+
 const hubdb_endpoints = {
 	base(endpoint, params, key, draft=false){
 		if(params){
@@ -51,8 +55,8 @@ exports.main = async (context, sendResponse) => {
   let functionResponse = "";
 
   if (context.method.toLowerCase() === 'post') {
-    console.log("context.body:");
-    console.log(context.body);
+    // console.log("context.body:");
+    // console.log(context.body);
     let cb = context.body;
     functionResponse = await submit_data(cb['name'],cb['field1'],cb['field2']);
   }else if(context.method.toLowerCase() === 'get'){
@@ -61,7 +65,7 @@ exports.main = async (context, sendResponse) => {
     // functionResponse += JSON.stringify(getTables());
     // functionResponse += JSON.stringify(getTable(table_def.tableIdOrName));
   };
-  console.log(JSON.stringify(functionResponse));
+  // console.log(JSON.stringify(functionResponse));
 
 
   // sendResponse is a callback function you call to send your response.
@@ -176,7 +180,7 @@ const form_subs_row = ()=>{
     }
   };
 }
-
+// submits new row and returns all rows
 async function submit_data(name="", field1="", field2=""){
   console.log(`submit_data(name=${name}, field1=${field1}, field2=${field2})`);
   const tableIdOrName = form_submissions_def.name;
@@ -184,15 +188,22 @@ async function submit_data(name="", field1="", field2=""){
   post_data.values.name=name;
   post_data.values.field1=field1;
   post_data.values.field2=field2;
-  post_data = post_data.values;
+  // post_data = post_data;
   console.log("posting:" +JSON.stringify(post_data));
   let retVal;
 
   try {
-    retVal = await axios.post(hubdb_endpoints.rows(tableIdOrName), post_data);
-    console.log(JSON.stringify(retVal, null, 2));
-    retVal = await axios.post(hubdb_endpoints.table_publish(tableIdOrName));
-    console.log(JSON.stringify(retVal, null, 2));
+          // await axios.post(hubdb_endpoints.table_rows("form_submissions", null), data=data);
+    // val = await axios.post(hubdb_endpoints.table_rows(tableIdOrName, null), data=post_data);
+    // console.log(JSON.stringify(retVal, null, 2));
+    let config = {
+      headers: {
+        "Content-Type": "application/json"
+      } 
+ }
+    val = await axios.post(hubdb_endpoints.table_publish(tableIdOrName), data='');
+    console.log(JSON.stringify(val, null, 2));
+    retVal = await axios.get(hubdb_endpoints.table_rows(tableIdOrName));
   } catch (e) {
     e.message === 'HTTP request failed'
     ? retVal = e.response
@@ -200,7 +211,7 @@ async function submit_data(name="", field1="", field2=""){
     console.error(JSON.stringify(retVal, null, 2));
   }
 
-  return JSON.stringify(retVal)
+  return retVal;
 };
 
 // async function getTable(tablename){
@@ -226,36 +237,14 @@ if(require.main = module){
 }
 
 async function mainfn(){
-  // let data= {
-  //   "values": {
-  //     "text_column": "sample text value",
-  //     "number_column": 76,
-  //     "multiselect": [
-  //       {
-  //         "id": "1",
-  //         "name": "Option 1",
-  //         "type": "option",
-  //         "order": 0
-  //       },
-  //       {
-  //         "id": "2",
-  //         "name": "Option 2",
-  //         "type": "option",
-  //         "order": 1
-  //       }
-  //     ]
-  //   },
-  //   "path": "test_path",
-  //   "name": "test_title",
-  //   "childTableId": "1902373"
-  // };
   let data = form_subs_row();
   data.values.name = "hello"
   data.values.field1 = "hi";
   data.values.field2 = 1234;
-  // let sub_res = await submit_data("hello", "hi", 123);
-  await axios.post(hubdb_endpoints.table_rows("form_submissions", null), data=data);
-  // console.log(sub_res.data);
+  console.log("posting:" +JSON.stringify(data));
+  let sub_res = await submit_data("hello", "hi", 124);
+  // let sub_res = await axios.post(hubdb_endpoints.table_rows("form_submissions", null), data=data);
+  console.log(JSON.stringify(sub_res.data, null, 2));
   let req = await axios.get(hubdb_endpoints.table_rows("form_submissions",null, draft=true));
-  console.log(req.data);
+  // console.log(JSON.stringify(req.data, null, 2));
 }

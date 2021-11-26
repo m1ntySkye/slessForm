@@ -27,20 +27,23 @@ document.forms.mainForm.onsubmit = async (event) => {
   
   let responseTgt = document.querySelector("p#responseTgt");
   let resultTgt = document.querySelector("p#resultTgt");
-  let errorTgt = document.querySelector("p#errorTgt");
+  // let resultTgt = document.querySelector("#resultTgt.table");
+  let errorTgt = document.querySelector("#errorTgt");
 
   let response = await fetch('/_hcms/api/test_submit', options);
-  responseTgt.textContent = JSON.stringify(response);
+  responseTgt.textContent = 'resp'+JSON.stringify(response);
 
   if (response.ok) {
-
     let responseBody = await response.json();
-    console.log(responseBody);
-    resultTgt.textContent = JSON.stringify(responseBody);
+    console.log(JSON.stringify(response, null, 2));
+    console.log(JSON.stringify(responseBody, null, 2));
+    // our out table is 'div.table#resultTgt table'
+    appendRows('div.table#resultTgt table', null, responseBody);
+    // resultTgt.textContent = JSON.stringify(responseBody);
 
   }else{
 
-    console.log(response);
+    console.log(JSON.stringify(response, null, 2));
     errorTgt.textContent = response.status;
 
   }
@@ -68,30 +71,30 @@ function jsonifyForm(formData){
   return JSON.stringify(object);
 }
 
-function buildTableForm(targetSelector, db_def){
-  let table = document.createElement("table");
-  let table_head = document.createElement("tr");
-  let table_body = document.createElement("tr");
-  db_def.columns.forEach(col => {
-    let colHeader = document.createElement("th");
-    let chl = document.createElement("label");
-    let colData = document.createElement("td");
-    let cdi = document.createElement("input",);
-    chl.innerText = col.label;
-    chl.setAttribute("for", col.name);
-    // chl.innerText = col.label;
-    cdi.setAttribute("name", col.name);
-    cdi.setAttribute("type", col.type.toLowerCase());
-    colHeader.appendChild(chl);
-    colData.appendChild(cdi);
-    table_head.appendChild(colHeader);
-    table_body.appendChild(colData);
-  });
-  table.appendChild(table_head);
-  table.appendChild(table_body);
-  document.querySelector(targetSelector).appendChild(table);
-  return table;
-}
+// function buildTableForm(targetSelector, db_def){
+//   let table = document.createElement("table");
+//   let table_head = document.createElement("tr");
+//   let table_body = document.createElement("tr");
+//   db_def.columns.forEach(col => {
+//     let colHeader = document.createElement("th");
+//     let chl = document.createElement("label");
+//     let colData = document.createElement("td");
+//     let cdi = document.createElement("input",);
+//     chl.innerText = col.label;
+//     chl.setAttribute("for", col.name);
+//     // chl.innerText = col.label;
+//     cdi.setAttribute("name", col.name);
+//     cdi.setAttribute("type", col.type.toLowerCase());
+//     colHeader.appendChild(chl);
+//     colData.appendChild(cdi);
+//     table_head.appendChild(colHeader);
+//     table_body.appendChild(colData);
+//   });
+//   table.appendChild(table_head);
+//   table.appendChild(table_body);
+//   document.querySelector(targetSelector).appendChild(table);
+//   return table;
+// }
 /**
  * assumes the targetselector refers to the same element 
  * that was passed to buildTableForm
@@ -101,7 +104,16 @@ function buildTableForm(targetSelector, db_def){
  * @param {Object} row_data parsed result of hubdb rows GET json
  */
 function appendRows(targetSelector, db_def, rows_data){
-  
+  let tbody = document.querySelector(`${targetSelector}`).querySelector("tbody");
+  rows_data.results.forEach(row=>{
+    let nrow = table_body = document.createElement("tr");
+    row.values.forEach(val => {
+      let ndat = document.createElement("td");
+      ndat.innerText = val
+      nrow.appendChild(ndat);
+    });
+    tbody.appendChild(nrow);
+  });
 }
 
 (()=>{
